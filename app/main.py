@@ -2,8 +2,6 @@ import logging
 import os
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, HTMLResponse
 from pathlib import Path
 
 from app.config import settings
@@ -22,13 +20,13 @@ logger = logging.getLogger(__name__)
 # Initialize FastAPI
 app = FastAPI(
     title=settings.APP_NAME,
-    description="🎓 AI-Powered Document Analyzer for R.S Education Solution",
+    description="🎓 AI-Powered Document Analyzer API for R.S Education Solution",
     version=settings.APP_VERSION,
     docs_url="/docs",
     redoc_url="/redoc"
 )
 
-# CORS
+# CORS — allow all origins so your website can call this API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -37,24 +35,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Static Files Setup
-STATIC_DIR = Path("static")
-if not STATIC_DIR.exists():
-    STATIC_DIR.mkdir(parents=True, exist_ok=True)
 
-# Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-
-@app.get("/", response_class=HTMLResponse)
-async def serve_home():
-    """Serves the main premium UI"""
-    index_file = STATIC_DIR / "index.html"
-    if index_file.exists():
-        logger.info("🎨 Serving premium UI...")
-        return FileResponse(index_file)
-    logger.warning("⚠️ index.html not found in static directory")
-    return HTMLResponse(content="<h1>UI Error</h1><p>The index.html file is missing from the static folder.</p>", status_code=404)
+@app.get("/")
+def root():
+    """API status endpoint"""
+    return {
+        "status": "online",
+        "name": settings.APP_NAME,
+        "version": settings.APP_VERSION,
+        "docs": "/docs",
+        "endpoint": "/analyze-document"
+    }
 
 
 @app.get("/health")
@@ -77,7 +68,8 @@ def health_check():
 )
 async def analyze_document(file: UploadFile = File(...)):
     """
-    Analyze student academic documents (marksheets, certificates)
+    Analyze student academic documents (marksheets, certificates).
+    Accepts: JPG, JPEG, PNG, PDF (max 10MB)
     """
     temp_file_path = None
     try:
@@ -92,7 +84,7 @@ async def analyze_document(file: UploadFile = File(...)):
             extracted_text = ocr_service.extract_text_from_image(temp_file_path)
 
         if not extracted_text or len(extracted_text.strip()) < 10:
-            return ErrorResponse(error="Unable to extract text. Ensure image is clear.").model_dump()
+            return ErrorResponse(error="Unable to extract text. Ensure the document image is clear.").model_dump()
 
         analysis_result = ai_service.analyze_document(extracted_text)
         return AnalysisResponse(status="success", data=analysis_result).model_dump()
