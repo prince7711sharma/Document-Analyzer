@@ -1,27 +1,11 @@
-# Build tools (must be first for stable builds)
-setuptools>=70.0.0
-wheel>=0.43.0
-
-# Web Framework
-fastapi==0.111.0
-uvicorn[standard]==0.29.0
-python-multipart==0.0.9
-
-# Environment & Config
-python-dotenv==1.0.1
-pydantic==2.7.1
-pydantic-core==2.18.2      # Must match pydantic version; has py3.11 wheels
-pydantic-settings==2.2.1
-
-# Image & PDF Processing
-pillow==11.1.0
-pymupdf==1.24.3
-
-# OCR
-easyocr==1.7.1
-
-# AI
-groq==0.8.0
-
-# File handling
-aiofiles==23.2.1
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+pydantic
+pydantic-settings
+pillow
+pymupdf
+easyocr
+groq
+aiofiles
