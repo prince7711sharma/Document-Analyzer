@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # build.sh — Runs during Render build phase
-# Pre-downloads EasyOCR English models so first request isn't delayed
+set -e  # Exit immediately if any command fails
 
-set -e  # Exit immediately if a command fails
+echo "⬆️  Upgrading pip, setuptools and wheel first..."
+pip install --upgrade pip setuptools wheel
 
 echo "📦 Installing Python dependencies..."
-pip install --upgrade pip
 pip install -r requirements.txt
 
 echo "🤖 Pre-downloading EasyOCR English language models..."
