@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     # Groq API
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
     GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+    # Vision model used for image OCR (replaces EasyOCR)
+    GROQ_VISION_MODEL: str = os.getenv("GROQ_VISION_MODEL", "meta-llama/llama-4-scout-17b-16e-instruct")
 
     # App Settings
     APP_NAME: str = os.getenv("APP_NAME", "Document Analyzer API")

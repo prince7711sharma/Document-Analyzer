@@ -6,6 +6,5 @@ pydantic
 pydantic-settings
 pillow
 pymupdf
-easyocr
 groq
 aiofiles
