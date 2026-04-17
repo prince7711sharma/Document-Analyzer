@@ -6,8 +6,10 @@ services:
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
     plan: free
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"           # Forces Render to use Python 3.11 (not 3.14)
       - key: GROQ_API_KEY
-        sync: false          # You will set this manually in Render dashboard
+        sync: false               # Set this manually in Render dashboard
       - key: GROQ_MODEL
         value: llama-3.3-70b-versatile
       - key: APP_NAME
@@ -18,5 +20,3 @@ services:
         value: /tmp/uploads
       - key: MAX_FILE_SIZE
         value: "10485760"
-      - key: PYTHON_VERSION
-        value: "3.11.0"
